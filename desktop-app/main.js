@@ -19,7 +19,7 @@ function createWindow() {
   // 加载您的在线地址 (推荐) 或 本地 HTML
   // win.loadFile('../index.html'); 
   // 或者直接加载您的 GitHub Pages:
-  // win.loadURL('https://GTASA7780.github.io/VISION-Parser/');
+  // win.loadURL('https://GTASA202375.github.io/VISION-Parser/');
   
   // 暂时加载本地 index.html 用于演示，请确保路径正确
   win.loadFile(path.join(__dirname, '../index.html'));
