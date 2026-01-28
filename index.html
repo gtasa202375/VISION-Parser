@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISION - VIP 视频解析</title>
+  <!-- 引入 Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 全局样式设定 */
+    body {
+      background-color: #141414;
+      color: #fff;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* 品牌主色调 */
+    .brand-red { color: #E50914; }
+    .bg-brand-red { background-color: #E50914; }
+    .bg-brand-red:hover { background-color: #f40612; }
+
+    /* 背景图设置 (暗色遮罩) */
+    .hero-bg {
+      background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%), 
+                        url('https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-bcae-07a3f8dc141a/f6d7434e-d6de-4185-a6d4-c77a2d08737b/US-en-20220502-popsignuptwoweeks-perspective_alpha_website_medium.jpg');
+      background-size: cover;
+      background-position: center;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.6);
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* 输入框样式优化 */
+    .netflix-input-group { position: relative; }
+    
+    .netflix-input {
+      width: 100%;
+      height: 60px;
+      padding: 20px 10px 10px;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    
+    .netflix-input:focus {
+      background: rgba(0, 0, 0, 0.9);
+      border-color: #fff;
+    }
+
+    /* 浮动标签样式 */
+    .netflix-label {
+      position: absolute;
+      top: 20px; left: 10px;
+      font-size: 14px;
+      color: #8c8c8c;
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+
+    /* 标签浮动动画逻辑 */
+    .netflix-input:focus ~ .netflix-label,
+    .netflix-input:not(:placeholder-shown) ~ .netflix-label {
+      top: 6px; font-size: 11px; font-weight: 700;
+    }
+
+    /* 播放器容器 (16:9 比例) */
+    .player-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 4px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .player-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero-bg">
+  <div class="overlay"></div>
+  
+  <div class="content flex flex-col min-h-screen">
+    
+    <!-- 顶部导航 -->
+    <nav class="flex justify-between items-center px-4 md:px-8 py-6">
+      <!-- 品牌 Logo: VISION -->
+      <h1 class="text-3xl md:text-4xl font-bold brand-red cursor-pointer tracking-tighter" onclick="location.reload()">
+        VISION <span class="text-xs text-white font-normal opacity-50 ml-1">PARSER</span>
+      </h1>
+      <button onclick="reset()" class="bg-red-600 text-white px-4 py-1 rounded font-medium hover:bg-red-700 text-sm transition">清空</button>
+    </nav>
+
+    <!-- 主体内容 -->
+    <main class="flex-grow flex flex-col items-center justify-center px-4 w-full max-w-6xl mx-auto text-center mt-6 mb-20">
+      
+      <h1 class="text-3xl md:text-5xl font-bold mb-8 drop-shadow-lg">无限视界，一键直达。</h1>
+      <!-- 已移除副标题说明文字 -->
+
+      <!-- 输入区域 -->
+      <div class="w-full max-w-4xl flex flex-col md:flex-row gap-2 mb-10">
+        <div class="netflix-input-group flex-grow">
+          <!-- onchange 用于确保 input 有内容时标签保持浮动状态 -->
+          <input type="text" id="url-input" class="netflix-input" placeholder=" " onchange="this.setAttribute('value', this.value);">
+          <label class="netflix-label">粘贴视频地址 (例如: 优酷/爱奇艺/腾讯/B站 URL)</label>
+        </div>
+        <button onclick="playCurrent()" class="bg-brand-red text-white text-2xl font-medium px-8 py-3 rounded md:rounded-l-none flex items-center justify-center gap-2 hover:bg-red-700 transition shadow-lg">
+          播放 <span class="text-3xl">›</span>
+        </button>
+      </div>
+
+      <!-- 播放器区域 -->
+      <div class="w-full shadow-2xl">
+        <div class="player-wrapper">
+          <iframe src="" frameborder="0" id="player" scrolling="no" allowfullscreen allowtransparency></iframe>
+        </div>
+        <div class="flex justify-between text-gray-500 text-xs mt-3 px-1">
+          <span>当前通道: <span class="text-green-500 font-bold">VIP 专线</span></span>
+          <span>按 Enter 键快速解析</span>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- 底部 Footer -->
+    <footer class="w-full bg-black bg-opacity-90 py-10 mt-auto border-t border-gray-800">
+      <div class="max-w-5xl mx-auto px-4 text-center">
+        
+        <p class="text-gray-500 mb-4 text-sm">© 2026 VISION Parser Tool. Open Source Project.</p>
+        
+        <!-- 联系方式区域 -->
+        <div class="flex flex-col md:flex-row justify-center items-center gap-4 text-sm text-gray-400">
+          <span>Email：3657990021@qq.com</span>
+          <span class="hidden md:inline">|</span>
+          <span>QQ：3657990021</span>
+          <span class="hidden md:inline">|</span>
+          <!-- 只有 Telegram 是超链接 -->
+          <span>
+            Telegram：<a href="https://t.me/gtasa7780" target="_blank" class="text-gray-400 hover:text-white hover:underline transition">@GTASA7780</a>
+          </span>
+        </div>
+
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+    // 核心配置：唯一保留的稳定接口 (im1907)
+    const API_URL = "https://im1907.top/?jx=";
+
+    const input = document.getElementById('url-input');
+    const player = document.getElementById('player');
+
+    // 执行解析播放逻辑
+    function playCurrent() {
+        const url = input.value.trim();
+        if (!url) {
+            alert('请先输入视频地址！');
+            return;
+        }
+        // 设置 iframe 的 src 属性，触发加载
+        player.src = API_URL + url;
+    }
+
+    // 重置功能
+    function reset() {
+        input.value = '';
+        player.src = '';
+    }
+
+    // 键盘事件监听：回车播放，ESC重置
+    input.addEventListener('keyup', function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) { // Enter 键
+            playCurrent();
+        } else if (event.keyCode === 27) { // Esc 键
+            reset();
+        }
+    });
+
+    // 页面加载时检测 URL 参数 (例如 index.html?url=...)
+    // 方便从外部直接传递链接进行解析
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlParam = urlParams.get('url');
+        if (urlParam) {
+            input.value = urlParam;
+            playCurrent();
+        }
+    };
+</script>
+
+</body>
+</html>
