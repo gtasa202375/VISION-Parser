@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "VISION - VIP 视频助手",
+  "version": "1.0",
+  "description": "点击图标，一键在 VISION 影院中播放当前视频。",
+  "icons": {
+    "48": "icon.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "点击解析"
+  },
+  "permissions": ["activeTab"]
+}
+
