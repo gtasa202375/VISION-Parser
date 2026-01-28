@@ -1,0 +1,16 @@
+{
+  "name": "VISION Parser",
+  "short_name": "VISION",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#141414",
+  "theme_color": "#E50914",
+  "description": "Minimalist VIP Video Parser",
+  "icons": [
+    {
+      "src": "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }
+  ]
+}
