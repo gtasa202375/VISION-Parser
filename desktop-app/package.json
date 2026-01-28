@@ -1,14 +1,42 @@
 {
-  "name": "vision-desktop",
-  "version": "1.0.0",
-  "description": "VISION Desktop Client",
+  "name": "vision-parser-desktop"，
+  "version": "2.0.0",
+  "description": "VISION - Minimalist VIP Video Parser Client",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
-  "author": "3657990021",
+  "author": "3657990021 <3657990021@qq.com>",
   "license": "MIT",
+  "build": {
+    "appId": "com.vision.parser",
+    "productName": "VISION Desktop",
+    "copyright": "Copyright © 2026 VISION Project",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
   "devDependencies": {
-    "electron": "^28.0.0"
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
   }
 }
+
+
