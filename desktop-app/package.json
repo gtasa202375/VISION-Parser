@@ -1,0 +1,14 @@
+{
+  "name": "vision-desktop",
+  "version": "1.0.0",
+  "description": "VISION Desktop Client",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "3657990021",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0"
+  }
+}
