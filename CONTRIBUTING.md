@@ -2,7 +2,7 @@
 感谢您有兴趣为 VISION Parser 做出贡献！无论是修复 Bug、添加新功能还是改进文档，我们都非常欢迎。
 🛠️ 如何开始
  * Fork 本仓库：点击右上角的 Fork 按钮，将项目复制到您的 GitHub 账户。
- * 克隆代码：git clone https://github.com/您的用户名/vision-parser.git
+ * 克隆代码：git clone https://github.com/GTASA202375/vision-parser.git
  * 创建分支：git checkout -b feature/AmazingFeature
  * 提交更改：git commit -m 'Add some AmazingFeature'
  * 推送到分支：git push origin feature/AmazingFeature
