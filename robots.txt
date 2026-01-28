@@ -4,4 +4,4 @@ Disallow: /server/
 Disallow: /core/
 Disallow: /tools/
 Disallow: /extension/
-Sitemap: https://www.google.com/search?q=https://gtasa7780.github.io/vision-parser/sitemap.xml
+Sitemap: https://gtasa202375.github.io/VISION-Parser/sitemap.xml
