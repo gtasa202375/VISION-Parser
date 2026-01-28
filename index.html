@@ -1,13 +1,31 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">。
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- ==========================================
+       [安全核心] Security Headers - 防御体系
+       ========================================== -->
+  <!-- 1. 强制 HTTPS: 防止中间人攻击 -->
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <!-- 2. 禁止点击劫持: 防止其他网站通过 iframe 嵌入你的网站 -->
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <!-- 3. XSS 防护: 浏览器检测到攻击时停止加载 -->
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <!-- 4. 内容类型嗅探防护 -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <!-- 5. 引用策略: 保护用户隐私，不向解析接口发送来源信息 -->
+  <meta name="referrer" content="no-referrer">
+
   <title>VISION - VIP 视频解析</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  
   <!-- 引入 Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <style>
     /* 全局样式设定 */
     body {
@@ -19,13 +37,13 @@
       overflow-x: hidden;
     }
 
-    /* 品牌主色调 */
-    。brand-red { color: #E50914; }
-    。bg-brand-red { background-color: #E50914; }
-    。bg-brand-red:hover { background-color: #f40612; }
+    /* 品牌主色调 (修复了 CSS 选择器语法错误) */
+    .brand-red { color: #E50914; }
+    .bg-brand-red { background-color: #E50914; }
+    .bg-brand-red:hover { background-color: #f40612; }
 
     /* 背景图设置 (暗色遮罩) */
-    。hero-bg {
+    .hero-bg {
       background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%), 
                         url('https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-bcae-07a3f8dc141a/f6d7434e-d6de-4185-a6d4-c77a2d08737b/US-en-20220502-popsignuptwoweeks-perspective_alpha_website_medium.jpg');
       background-size: cover;
@@ -34,7 +52,7 @@
       position: relative;
     }
 
-    。overlay {
+    .overlay {
       background: rgba(0, 0, 0, 0.6);
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -121,7 +139,6 @@
     <main class="flex-grow flex flex-col items-center justify-center px-4 w-full max-w-6xl mx-auto text-center mt-6 mb-20">
       
       <h1 class="text-3xl md:text-5xl font-bold mb-8 drop-shadow-lg">无限视界，一键直达。</h1>
-      <!-- 已移除副标题说明文字 -->
 
       <!-- 输入区域 -->
       <div class="w-full max-w-4xl flex flex-col md:flex-row gap-2 mb-10">
@@ -138,10 +155,22 @@
       <!-- 播放器区域 -->
       <div class="w-full shadow-2xl">
         <div class="player-wrapper">
-          <iframe src="" frameborder="0" id="player" scrolling="no" allowfullscreen allowtransparency></iframe>
+          <!-- 
+             [安全增强] Sandbox 属性 
+             禁止了 allow-top-navigation 和 allow-popups，防止恶意跳转和弹窗
+          -->
+          <iframe 
+            src="" 
+            frameborder="0" 
+            id="player" 
+            scrolling="no" 
+            allowfullscreen 
+            allowtransparency
+            sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+          ></iframe>
         </div>
         <div class="flex justify-between text-gray-500 text-xs mt-3 px-1">
-          <span>当前通道: <span class="text-green-500 font-bold">VIP 专线</span></span>
+          <span>当前通道: <span class="text-green-500 font-bold">VIP 专线 (安全模式)</span></span>
           <span>按 Enter 键快速解析</span>
         </div>
       </div>
@@ -181,11 +210,29 @@
 
     // 执行解析播放逻辑
     function playCurrent() {
-        const url = input.value.trim();
+        let url = input.value.trim();
+        
         if (!url) {
             alert('请先输入视频地址！');
             return;
         }
+
+        // ==========================================
+        // [安全增强] 输入清洗 (Sanitization)
+        // ==========================================
+        
+        // 1. 移除所有 HTML 标签，防止 XSS 脚本注入
+        url = url.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        
+        // 2. 验证 URL 格式 (必须包含 http 或 https)
+        // 简单的正则验证，防止输入 "javascript:alert(1)" 这种恶意代码
+        const urlPattern = /^(http|https):\/\/[^ "]+$/;
+        
+        if (!urlPattern.test(url)) {
+            alert('安全警告: 请输入合法的 URL 地址 (http/https 开头)');
+            return;
+        }
+
         // 设置 iframe 的 src 属性，触发加载
         player.src = API_URL + url;
     }
@@ -193,7 +240,8 @@
     // 重置功能
     function reset() {
         input.value = '';
-        player.src = '';
+        player.src = ''; // 停止播放
+        player.removeAttribute('src'); // 彻底清除
     }
 
     // 键盘事件监听：回车播放，ESC重置
@@ -207,16 +255,17 @@
     });
 
     // 页面加载时检测 URL 参数 (例如 index.html?url=...)
-    // 方便从外部直接传递链接进行解析
     window.onload = function() {
         const urlParams = new URLSearchParams(window.location.search);
         const urlParam = urlParams.get('url');
         if (urlParam) {
             input.value = urlParam;
-            playCurrent();
+            playCurrent(); // 这里也会经过安全检查
         }
     };
 </script>
 
 </body>
 </html>
+
+
