@@ -18,7 +18,7 @@
     'use strict';
 
     // 配置你的解析网站地址 (如果是本地测试请填本地地址，部署后填 GitHub Pages 地址)
-    const VISION_HOST = "https://你的GitHub用户名.github.io/你的仓库名/"; 
+    const VISION_HOST = "https://gtasa202375.github.io/VISION-Parser/"; 
     // 如果还没部署，可以先写: "http://127.0.0.1:5500/index.html?url="
 
     const css = `
