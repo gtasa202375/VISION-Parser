@@ -53,6 +53,7 @@ docker run -d -p 8080:80 -v $(pwd):/usr/share/nginx/html --name vision-parser ng
 | 变量名 | 默认值 | 说明 |
 |---|---|---|
 | API_URL | "https://im1907.top/?jx=" | 视频解析接口前缀 URL |
+
 🤝 联系方式
 有任何问题或建议，欢迎联系作者：
  * Email：3657990021@qq.com
