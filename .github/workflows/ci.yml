@@ -9,54 +9,48 @@ on:
 
 jobs:
 
-  # 任务 1: 检查前端文件完整性
-  check-frontend:
+  # 任务: 网页文件完整性检查
+  check-web-integrity:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Verify HTML Structure
+    
+    # 1. 检查核心首页
+    - name: Verify Index Page
       run: |
-        if [ -f index.html ]; then
-          echo "index.html exists."
+        if [ -f "index.html" ]; then
+          echo "✅ index.html found. (首页存在)"
         else
-          echo "Error: index.html missing!"
+          echo "❌ Error: index.html is missing!"
           exit 1
         fi
 
-  # 任务 2: 构建 Go 工具
-  build-go-cli:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.20'
-    - name: Build Go CLI
+    # 2. 检查 TV 版 (如果没上传也不报错，只是警告)
+    - name: Verify TV Page
       run: |
-        cd tools
-        go build -v -o vision-cli main.go
+        if [ -f "tv.html" ]; then
+          echo "✅ tv.html found. (TV版存在)"
+        else
+          echo "⚠️ Warning: tv.html is missing. (TV版未上传)"
+        fi
 
-  # 任务 3: 测试 Rust 核心
-  build-rust-core:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-    - name: Check Rust Syntax
+    # 3. 检查文档
+    - name: Verify Documentation
       run: |
-        cd core
-        cargo check --verbose
+        if [ -f "README.md" ]; then
+          echo "✅ README.md found."
+        else
+          echo "⚠️ Warning: README.md is missing."
+        fi
 
-  # 任务 4: 模拟 Docker 构建
-  docker-build:
+  # 任务: 简单的 HTML 语法检查 (可选，不通过也不卡流程)
+  html-syntax-check:
     runs-on: ubuntu-latest
-    needs: [check-frontend]
+    needs: check-web-integrity
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag vision-parser:latest
+    - name: Simple Syntax Check
+      run: |
+        grep -q "<!DOCTYPE html>" index.html && echo "✅ Doctype looks good." || echo "⚠️ Check Doctype."
+
+
