@@ -18,6 +18,7 @@ VISION Parser 是一款极简主义的网页视频解析工具。
  * 进入仓库 → Settings → Pages
  * 在 Source 下选择 main 分支 → 保存
  * 几分钟后即可获得一个免费的在线解析网站
+
 🌍 多种部署方式 (Deployment)
 本项目是纯静态页面，支持多种部署方式，您可以根据需求选择最适合的一种。
 1. GitHub Pages (推荐/最简单)
